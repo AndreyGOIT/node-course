@@ -5,7 +5,12 @@ const contactsPath = path.resolve("./db/contacts.json");
 
 async function listContacts() {
   const data = await fs.readFile(contactsPath, "utf8");
-  console.table(data.toString());
+  try {
+    const contacts = JSON.parse(data);
+    console.table(contacts);
+  } catch {
+    (err) => console.log(err.message);
+  }
 }
 
 async function getContactById(contactId) {
@@ -32,14 +37,17 @@ async function removeContact(contactId) {
 
 async function addContact(name, email, phone) {
   const data = await fs.readFile(contactsPath, "utf8");
+  try {
+    const contacts = JSON.parse(data);
+    const id = contacts.length + 1;
 
-  const contacts = JSON.parse(data);
-  const id = contacts.length + 1;
+    const contact = { id, name, email, phone };
 
-  const contact = { id, name, email, phone };
-
-  contacts.push(contact);
-  console.log(contacts);
+    contacts.push(contact);
+    console.log(contacts);
+  } catch {
+    (err) => console.log(err.message);
+  }
 }
 
 module.exports = {
